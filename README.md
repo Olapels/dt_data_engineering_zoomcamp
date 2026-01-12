@@ -1,0 +1,1 @@
+This repo contains all my files, scripts, assignments and submissions for the Data Engineering Zoomcamp 2026 organized by Data Talks.
