@@ -1,4 +1,3 @@
 *.parquet
 __pycache__/
-__ny_taxi_postgres_data__/
 data/
