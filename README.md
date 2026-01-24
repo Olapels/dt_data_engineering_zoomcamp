@@ -1,87 +1,19 @@
 # Data Engineering Zoomcamp 2026
 
-This repo contains all my files, scripts, assignments, and submissions for the Data Engineering Zoomcamp 2026 organized by Data Talks.
+This repository contains code and configurations for the Data Engineering Zoomcamp 2026 course. The pipeline folder contains code for building a data pipeline to ingest data into a PostgreSQL database using Docker containers.
 
-## Prerequisites
+## Project Overview
 
-- Docker and Docker Compose
-- Python 3.13+ (for local development)
-- `uv` for dependency management
+- **Data Source**: NY Taxi and Limousine Commission (TLC) trip data (e.g., yellow taxi data from 2021).
+- **Destination**: PostgreSQL database running in a Docker container.
+- **Tools**: Python (with pandas, SQLAlchemy, psycopg2), Docker, Docker Compose, uv for dependency management.
+- **Pipeline**: Processes CSV data, applies data types and parsing, and loads into Postgres tables.
 
-## Setup
+## Project Structure
 
-### Install Dependencies
+- `docker_and_terraform/pipeline/`: Core pipeline code, Docker setup, database configurations, and detailed documentation.
+  - Includes `pipeline.py` for data ingestion, `Dockerfile` for containerization, `docker-compose.yml` for orchestration, and test notebooks.
 
-Install dependencies using `uv`:
+## Getting Started
 
-```bash
-uv sync
-```
-
-#### Check Port Availability
-
-Ensure no other service is running on port 5432:
-
-**Mac:**
-```bash
-sudo lsof -i :5432
-```
-
-**Windows:**
-```bash
-netstat -ano | findstr :5432
-```
-
-**Linux:**
-```bash
-sudo netstat -tlnp | grep :5432
-```
-
-To run PostgreSQL on a different port, update the `-p` flag:
-```bash
--p 8000:5432
-```
-
-### Application Docker Image
-
-Build the application image (optional: if not using Docker Compose, which builds the image automatically; note: this creates one of two images in your setup; the other is the PostgreSQL image):
-
-```bash
-docker build -t test-app:latest -f docker_and_terraform/pipeline/Dockerfile .
-```
-
-## Running
-
-### Docker Compose (Recommended)
-
-Orchestrate both services (PostgreSQL and application) in separate containers using the `docker-compose.yml` file in the root directory:
-
-```bash
-docker-compose up --build
-```
-
-### Separate Containers
-
-1. **PostgreSQL Container** (runs the database; currently active):
-   ```bash
-   docker run -it --rm \
-       -e POSTGRES_USER="root" \
-       -e POSTGRES_PASSWORD="root" \
-       -e POSTGRES_DB="ny_taxi" \
-       -v ny_taxi_postgres_data:/var/lib/postgresql/data \
-       -p 5432:5432 \
-       postgres:18
-   ```
-
-2. **Application Container** (runs your pipeline):
-   ```bash
-   docker run --network host test-app:latest
-   ```
-
-<!-- ### Local Development
-
-Run the pipeline locally:
-
-```bash
-uv run python pipeline.py
-``` -->
+For detailed setup, dependencies, and running instructions, refer to the [pipeline README](docker_and_terraform/pipeline/README.md).
