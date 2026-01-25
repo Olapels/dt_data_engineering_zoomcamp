@@ -1,0 +1,3 @@
+# Ignore Parquet & csv files
+*.parquet
+*.csv
