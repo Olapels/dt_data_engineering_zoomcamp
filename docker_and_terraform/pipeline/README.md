@@ -5,6 +5,8 @@ Containerised data pipeline for ingesting web data into a PostgreSQL database.
 
 to see the sql queries for the homework [click here](Assignment.md)
 
+to see the reference course [click here](https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main)
+
 ## Overview:
 -Fetches data from the [NYC TLC Trip Record Data](https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page).
 
