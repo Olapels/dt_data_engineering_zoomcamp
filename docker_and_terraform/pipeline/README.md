@@ -3,6 +3,8 @@
 
 Containerised data pipeline for ingesting web data into a PostgreSQL database.
 
+to see the sql queries for the homework [click here](docker_and_terraform/pipeline/Assignment.md)
+
 ## Overview:
 -Fetches data from the [NYC TLC Trip Record Data](https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page).
 
