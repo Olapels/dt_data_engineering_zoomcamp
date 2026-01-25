@@ -1,20 +1,23 @@
 
-# NYC Taxi Data Ingestion Pipeline
+# Data Ingestion Pipeline with Docker 
 
 Containerised data pipeline for ingesting web data into a PostgreSQL database.
 
----
+## Overview:
+-Fetches data from the [NYC TLC Trip Record Data](https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page).
 
-## Overview
+-Streams the datasets in chunks into a PostgreSQL database.
 
-This pipeline:
+-Uses Docker and Docker Compose to orchestrate the environment, with Python dependencies managed via uv.
 
-- Downloads data from a remote source  
-- Streams the data in chunks using Pandas  
-- Creates and loads a PostgreSQL table via SQLAlchemy  
-- Provides pgAdmin for GUI-based interaction (optional)  
-- Supports pgcli for CLI-based database access  
-- Is fully containerised with Docker and packaged using `uv`
+Infrastructure Components
+-PostgreSQL: A containerized database instance.
+
+-pgAdmin: A web-based GUI for database management and visualization.
+
+-pgcli: A command-line interface with auto-completion and syntax highlighting for SQL queries.
+
+#####  Inspect the `ingest_data.py` file to see the script for the ETL logic.
 
 ---
 
@@ -23,11 +26,22 @@ This pipeline:
 - Docker  
 - Docker Compose  
 
----
 
 ## Usage
 
-### 1. Start Postgres and pgAdmin
+
+### 1. Clone the top-level repo into your desired folder:
+```bash
+git clone https://github.com/Olapels/dt_data_engineering_zoomcamp.git
+```
+
+Navigate to the pipeline folder
+```bash
+cd docker_and_terraform
+cd pipeline
+```
+
+### 2. Start Postgres and pgAdmin
 
 ```bash
 docker compose up -d
@@ -36,18 +50,16 @@ docker compose up -d
 This starts the PostgreSQL and pgAdmin containers and exposes the following ports:
 
 * Postgres: `localhost:5432`
-* pgAdmin: `http://localhost:8085`
+* pgAdmin: `localhost:8085`
 
-You can use pgAdmin to visually inspect the database, or pgcli if you prefer the CLI.
 
-#### pgAdmin setup
+#### 3. pgAdmin setup
 
 Open your browser and go to:
 
 ```
-http://localhost:8085
+localhost:8085
 ```
-
 Login credentials:
 
 * Email: `admin@admin.com`
@@ -77,39 +89,33 @@ Register a new server:
 * Database: `ny_taxi`
 
 ---
-
-### 2. Build the ingestion image
+### 4. Build the ingestion image
 
 ```bash
 docker build -t ny-taxi-ingest .
 ```
 
 ---
+### 5. Run ingestion
 
-### 3. Check Docker Compose network
-
-```bash
-docker network ls
-```
-
-The network name is what you would use as the `host` when running the ingestion container.
-
----
-
-### 4. Run ingestion
+Docker Compose will automatically create a network for the services based on the top-level folder name.
+`'[folder_name]_default'` --> `'pipeline_default'` in this case.
 
 ```bash
-docker run --rm --network="host" ny-taxi-ingest \
-  --year 2021 \
-  --month 1
+docker run -it \
+  --network=pipeline_default \
+  ny-taxi-ingest \
+    --pg-host=pgdatabase \
+    --pg-user=root \
+    --pg-pass=root \
+    --pg-db=ny_taxi \
+    --year=2021 \
+    --month=1
 ```
 
-This loads data into the `yellow_taxi_data` table.
+## CLI options
 
----
-
-## CLI Options
-
+you can edit the configuration when creating the ingestion pipeline Docker image through the following cli options
 ```
 --pg-user        Postgres user (default: root)
 --pg-pass        Postgres password (default: root)
@@ -122,10 +128,13 @@ This loads data into the `yellow_taxi_data` table.
 --chunksize      CSV chunk size (default: 100000)
 ```
 
----
+### 5. Interact with your data:
+ When the ingestion is complete, you can optionally query via pgcli.
 
-## Notes
-
-* Table schema is created on the first chunk & subsequent chunks are appended
+ in the same pipeline folder, run:
+ ``` bash
+uv run pgcli -h localhost -p 5432 -u root -d ny_taxi
+```
+and then you get a dedicated cli for interacting with the ingested data.
 
 
