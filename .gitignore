@@ -1,5 +1,19 @@
-# Ignore Parquet & csv files
+# Data Files
 *.parquet
 *.csv
+*.ipynb_checkpoints/
+
+# Environment / Secrets
 *.env
-*.tf
+.env*
+
+# Terraform
+*.tfstate*
+.terraform/
+*.tfvars
+*.tfvars.json
+
+#logs
+*.log
+*_pycache_*/
+
